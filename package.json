@@ -86,6 +86,16 @@
       "import": "./dist/next/index.js",
       "types": "./dist/next/index.d.ts",
       "default": "./dist/next/index.js"
+    },
+    "./email": {
+      "import": "./dist/email/index.js",
+      "types": "./dist/email/index.d.ts",
+      "default": "./dist/email/index.js"
+    },
+    "./email/components": {
+      "import": "./dist/components/email/exports.js",
+      "types": "./dist/components/email/exports.d.ts",
+      "default": "./dist/components/email/exports.js"
     }
   },
   "files": [
@@ -114,6 +124,7 @@
     "postcss": ">=8.0.0",
     "postcss-load-config": ">=4.0.0",
     "react": ">=19.2.1",
+    "react-dom": ">=19.2.1",
     "tailwindcss": ">=3.0.0 || >=4.0.0",
     "zod": ">=3.0.0"
   },
@@ -172,6 +183,7 @@
     "next": "^16.1.6",
     "payload": "^3.78.0",
     "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "typescript": "^5.9.3"
   },
   "keywords": [

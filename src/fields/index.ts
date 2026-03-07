@@ -117,6 +117,11 @@ export type {
   GradientMask,
 } from './shared.js'
 export { backgroundValueToCSS, gradientValueToCSS, getBackgroundImageOpacity } from './shared.js'
+export {
+  colorValueToEmailCSS,
+  paddingValueToEmailCSS,
+  backgroundValueToEmailCSS,
+} from './shared.js'
 
 export { ResponsiveField, createResponsiveField } from './ResponsiveField.js'
 export type { Breakpoint, ResponsiveValue, VisibilityValue, ResponsiveCSSResult } from './shared.js'

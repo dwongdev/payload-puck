@@ -1177,6 +1177,78 @@ export function getBackgroundImageOpacity(
   return opacity < 100 ? opacity / 100 : undefined
 }
 
+// =============================================================================
+// Email CSS Converters
+// =============================================================================
+// Email-safe versions of CSS converters. Email clients don't support:
+// - rgba/hsla colors (use hex only)
+// - CSS shorthand inconsistently
+// - rem/em units (use px only)
+
+/**
+ * Converts a ColorValue to an email-safe hex string.
+ * Email clients have poor rgba support, so we always return hex.
+ * Opacity is baked into the hex value by blending with white.
+ */
+export function colorValueToEmailCSS(color: ColorValue | null | undefined): string | undefined {
+  if (!color?.hex) return undefined
+
+  const opacity = color.opacity ?? 100
+  if (opacity === 100) return color.hex
+
+  // Bake opacity into hex — email clients don't support rgba
+  const rgb = hexToRgb(color.hex)
+  if (!rgb) return color.hex
+
+  // Blend with white background (most emails have white/light bg)
+  const blend = (c: number) => Math.round(c * (opacity / 100) + 255 * (1 - opacity / 100))
+  const r = blend(rgb.r).toString(16).padStart(2, '0')
+  const g = blend(rgb.g).toString(16).padStart(2, '0')
+  const b = blend(rgb.b).toString(16).padStart(2, '0')
+  return `#${r}${g}${b}`
+}
+
+/**
+ * Converts a PaddingValue to an email-safe CSS padding string.
+ * Always uses px units (email clients don't reliably support rem/em).
+ */
+export function paddingValueToEmailCSS(padding: PaddingValue | null | undefined): string | undefined {
+  if (!padding) return undefined
+
+  const { top, right, bottom, left } = padding
+
+  if (top === right && right === bottom && bottom === left) {
+    return `${top}px`
+  }
+  if (top === bottom && left === right) {
+    return `${top}px ${right}px`
+  }
+  return `${top}px ${right}px ${bottom}px ${left}px`
+}
+
+/**
+ * Converts a BackgroundValue to email-safe inline style properties.
+ * Only supports solid colors — gradients and images need VML for Outlook.
+ */
+export function backgroundValueToEmailCSS(
+  bg: BackgroundValue | null | undefined
+): React.CSSProperties {
+  if (!bg || bg.type === 'none') return {}
+
+  if (bg.type === 'solid' && bg.solid) {
+    const color = colorValueToEmailCSS(bg.solid)
+    return color ? { backgroundColor: color } : {}
+  }
+
+  // Gradient backgrounds: use first stop color as fallback
+  if (bg.type === 'gradient' && bg.gradient?.stops?.length) {
+    const fallback = colorValueToEmailCSS(bg.gradient.stops[0].color)
+    return fallback ? { backgroundColor: fallback } : {}
+  }
+
+  return {}
+}
+
 /**
  * Check if any custom style values are set
  */
