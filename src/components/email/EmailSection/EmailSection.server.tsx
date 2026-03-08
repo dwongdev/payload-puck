@@ -22,16 +22,18 @@ export const EmailSectionConfig: ComponentConfig = {
 
     return (
       <table {...TABLE_ATTRS} style={centeredTableStyle(maxWidth)}>
-        <tr>
-          <td
-            style={{
-              ...(bgColor ? { backgroundColor: bgColor } : {}),
-              ...(paddingCSS ? { padding: paddingCSS } : {}),
-            }}
-          >
-            <ContentSlot />
-          </td>
-        </tr>
+        <tbody>
+          <tr>
+            <td
+              style={{
+                ...(bgColor ? { backgroundColor: bgColor } : {}),
+                ...(paddingCSS ? { padding: paddingCSS } : {}),
+              }}
+            >
+              <ContentSlot />
+            </td>
+          </tr>
+        </tbody>
       </table>
     )
   },

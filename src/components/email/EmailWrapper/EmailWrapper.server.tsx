@@ -33,17 +33,19 @@ export const EmailWrapperConfig: ComponentConfig = {
     // for Outlook email client compatibility - no user input is used
     return (
       <table {...TABLE_ATTRS} style={FULL_WIDTH_TABLE_STYLE}>
-        <tr>
-          <td style={tdStyle}>
-            {backgroundImage && (
-              <div dangerouslySetInnerHTML={{ __html: vmlBackgroundOpen({ width: maxWidth ?? 600, src: backgroundImage }) }} />
-            )}
-            <ContentSlot />
-            {backgroundImage && (
-              <div dangerouslySetInnerHTML={{ __html: vmlBackgroundClose() }} />
-            )}
-          </td>
-        </tr>
+        <tbody>
+          <tr>
+            <td style={tdStyle}>
+              {backgroundImage && (
+                <div dangerouslySetInnerHTML={{ __html: vmlBackgroundOpen({ width: maxWidth ?? 600, src: backgroundImage }) }} />
+              )}
+              <ContentSlot />
+              {backgroundImage && (
+                <div dangerouslySetInnerHTML={{ __html: vmlBackgroundClose() }} />
+              )}
+            </td>
+          </tr>
+        </tbody>
       </table>
     )
   },

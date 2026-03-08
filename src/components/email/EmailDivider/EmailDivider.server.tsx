@@ -16,18 +16,20 @@ export const EmailDividerConfig: ComponentConfig<EmailDividerProps> = {
     const borderColor = colorValueToEmailCSS(color) ?? '#dddddd'
     return (
       <table {...TABLE_ATTRS} style={{ width, margin: '0 auto', borderCollapse: 'collapse' }}>
-        <tr>
-          <td
-            style={{
-              borderTop: `${thickness}px solid ${borderColor}`,
-              fontSize: '1px',
-              lineHeight: '1px',
-              height: '1px',
-            }}
-          >
-            &nbsp;
-          </td>
-        </tr>
+        <tbody>
+          <tr>
+            <td
+              style={{
+                borderTop: `${thickness}px solid ${borderColor}`,
+                fontSize: '1px',
+                lineHeight: '1px',
+                height: '1px',
+              }}
+            >
+              &nbsp;
+            </td>
+          </tr>
+        </tbody>
       </table>
     )
   },

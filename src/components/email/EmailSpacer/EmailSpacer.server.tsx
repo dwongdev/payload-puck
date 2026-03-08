@@ -11,11 +11,13 @@ export const EmailSpacerConfig: ComponentConfig<EmailSpacerProps> = {
   defaultProps,
   render: ({ height }) => (
     <table {...TABLE_ATTRS} style={FULL_WIDTH_TABLE_STYLE}>
-      <tr>
-        <td style={{ height: `${height}px`, fontSize: '1px', lineHeight: `${height}px` }}>
-          &nbsp;
-        </td>
-      </tr>
+      <tbody>
+        <tr>
+          <td style={{ height: `${height}px`, fontSize: '1px', lineHeight: `${height}px` }}>
+            &nbsp;
+          </td>
+        </tr>
+      </tbody>
     </table>
   ),
 }

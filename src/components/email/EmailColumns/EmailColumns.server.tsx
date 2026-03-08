@@ -32,19 +32,21 @@ export const EmailColumnsConfig: ComponentConfig = {
 
     return (
       <table {...TABLE_ATTRS} style={FULL_WIDTH_TABLE_STYLE}>
-        <tr>
-          <td style={colStyle}>
-            <ColSlot1 />
-          </td>
-          <td style={colStyle}>
-            <ColSlot2 />
-          </td>
-          {columnCount === 3 && (
+        <tbody>
+          <tr>
             <td style={colStyle}>
-              <ColSlot3 />
+              <ColSlot1 />
             </td>
-          )}
-        </tr>
+            <td style={colStyle}>
+              <ColSlot2 />
+            </td>
+            {columnCount === 3 && (
+              <td style={colStyle}>
+                <ColSlot3 />
+              </td>
+            )}
+          </tr>
+        </tbody>
       </table>
     )
   },

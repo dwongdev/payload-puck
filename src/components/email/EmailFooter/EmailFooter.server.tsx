@@ -21,31 +21,33 @@ export const EmailFooterConfig: ComponentConfig<EmailFooterProps> = {
   defaultProps,
   render: ({ companyName, address, unsubscribeText, unsubscribeUrl }) => (
     <table {...TABLE_ATTRS} style={FULL_WIDTH_TABLE_STYLE}>
-      <tr>
-        <td
-          align="center"
-          style={{
-            padding: '20px',
-            textAlign: 'center',
-            borderTop: '1px solid #eeeeee',
-          }}
-        >
-          <p style={mutedStyle}>{companyName}</p>
-          <p style={mutedStyle}>{address}</p>
-          <p style={{ ...mutedStyle, marginTop: '8px' }}>
-            <a
-              href={unsubscribeUrl}
-              style={{
-                color: '#999999',
-                textDecoration: 'underline',
-                fontSize: '12px',
-              }}
-            >
-              {unsubscribeText}
-            </a>
-          </p>
-        </td>
-      </tr>
+      <tbody>
+        <tr>
+          <td
+            align="center"
+            style={{
+              padding: '20px',
+              textAlign: 'center',
+              borderTop: '1px solid #eeeeee',
+            }}
+          >
+            <p style={mutedStyle}>{companyName}</p>
+            <p style={mutedStyle}>{address}</p>
+            <p style={{ ...mutedStyle, marginTop: '8px' }}>
+              <a
+                href={unsubscribeUrl}
+                style={{
+                  color: '#999999',
+                  textDecoration: 'underline',
+                  fontSize: '12px',
+                }}
+              >
+                {unsubscribeText}
+              </a>
+            </p>
+          </td>
+        </tr>
+      </tbody>
     </table>
   ),
 }

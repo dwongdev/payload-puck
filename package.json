@@ -1,6 +1,6 @@
 {
   "name": "@delmaredigital/payload-puck",
-  "version": "0.6.16",
+  "version": "0.6.17-dev.3",
   "description": "Puck visual page builder plugin for Payload CMS",
   "type": "module",
   "license": "MIT",
@@ -102,7 +102,7 @@
     "dist"
   ],
   "scripts": {
-    "dev-publish": "pnpm version prerelease --preid=dev --no-git-tag-version && pnpm build && pnpm publish --registry http://localhost:4873 --no-git-checks",
+    "dev-publish": "pnpm build && pnpm version prerelease --preid=dev --no-git-tag-version && pnpm publish --registry http://localhost:4873 --no-git-checks --tag dev",
     "generate-version": "node scripts/generate-version.js",
     "prebuild": "pnpm generate-version",
     "build": "pnpm build:swc && pnpm build:types && pnpm copyfiles",

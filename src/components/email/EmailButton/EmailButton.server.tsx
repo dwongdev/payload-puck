@@ -29,38 +29,40 @@ export const EmailButtonConfig: ComponentConfig<EmailButtonProps> = {
 
     return (
       <table {...TABLE_ATTRS} style={tableStyle} align={alignAttr}>
-        <tr>
-          <td
-            align="center"
-            style={{
-              backgroundColor: bgColor,
-              borderRadius: `${borderRadius}px`,
-              padding: 0,
-            }}
-          >
-            <a
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
+        <tbody>
+          <tr>
+            <td
+              align="center"
               style={{
-                display: 'inline-block',
-                width: fullWidth ? '100%' : undefined,
                 backgroundColor: bgColor,
-                color: txtColor,
-                fontWeight: 'bold',
-                fontSize: '16px',
-                textDecoration: 'none',
-                textAlign: 'center',
-                padding,
                 borderRadius: `${borderRadius}px`,
-                border: `1px solid ${bgColor}`,
-                boxSizing: 'border-box',
+                padding: 0,
               }}
             >
-              {text}
-            </a>
-          </td>
-        </tr>
+              <a
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-block',
+                  width: fullWidth ? '100%' : undefined,
+                  backgroundColor: bgColor,
+                  color: txtColor,
+                  fontWeight: 'bold',
+                  fontSize: '16px',
+                  textDecoration: 'none',
+                  textAlign: 'center',
+                  padding,
+                  borderRadius: `${borderRadius}px`,
+                  border: `1px solid ${bgColor}`,
+                  boxSizing: 'border-box',
+                }}
+              >
+                {text}
+              </a>
+            </td>
+          </tr>
+        </tbody>
       </table>
     )
   },

@@ -27,17 +27,20 @@ export const EmailSocialConfig: ComponentConfig<EmailSocialProps> = {
     if (!links?.length) {
       return (
         <table {...TABLE_ATTRS} style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <tr>
-            <td style={{ padding: '10px 0' }} />
-          </tr>
+          <tbody>
+            <tr>
+              <td style={{ padding: '10px 0' }} />
+            </tr>
+          </tbody>
         </table>
       )
     }
 
     return (
       <table {...TABLE_ATTRS} style={{ width: '100%', borderCollapse: 'collapse' }}>
-        <tr>
-          <td align={alignment} style={{ padding: '10px 0', textAlign: alignment }}>
+        <tbody>
+          <tr>
+            <td align={alignment} style={{ padding: '10px 0', textAlign: alignment }}>
             {links.map((link, i) => (
               <a
                 key={i}
@@ -62,8 +65,9 @@ export const EmailSocialConfig: ComponentConfig<EmailSocialProps> = {
                 {PLATFORM_LABELS[link.platform]?.charAt(0) ?? '?'}
               </a>
             ))}
-          </td>
-        </tr>
+            </td>
+          </tr>
+        </tbody>
       </table>
     )
   },

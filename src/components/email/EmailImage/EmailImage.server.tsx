@@ -18,19 +18,21 @@ export const EmailImageConfig: ComponentConfig<EmailImageProps> = {
     if (!image?.url) {
       return (
         <table {...TABLE_ATTRS} style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <tr>
-            <td
-              align={alignment}
-              style={{
-                padding: '20px',
-                textAlign: alignment,
-                color: '#999999',
-                fontSize: '14px',
-              }}
-            >
-              No image selected
-            </td>
-          </tr>
+          <tbody>
+            <tr>
+              <td
+                align={alignment}
+                style={{
+                  padding: '20px',
+                  textAlign: alignment,
+                  color: '#999999',
+                  fontSize: '14px',
+                }}
+              >
+                No image selected
+              </td>
+            </tr>
+          </tbody>
         </table>
       )
     }
@@ -63,11 +65,13 @@ export const EmailImageConfig: ComponentConfig<EmailImageProps> = {
 
     return (
       <table {...TABLE_ATTRS} style={{ width: '100%', borderCollapse: 'collapse' }}>
-        <tr>
-          <td align={alignment} style={{ textAlign: alignment }}>
-            {content}
-          </td>
-        </tr>
+        <tbody>
+          <tr>
+            <td align={alignment} style={{ textAlign: alignment }}>
+              {content}
+            </td>
+          </tr>
+        </tbody>
       </table>
     )
   },

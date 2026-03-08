@@ -19,45 +19,47 @@ export const EmailHeaderConfig: ComponentConfig<EmailHeaderProps> = {
 
     return (
       <table {...TABLE_ATTRS} style={FULL_WIDTH_TABLE_STYLE}>
-        <tr>
-          <td
-            align="center"
-            style={{
-              backgroundColor: bgColor,
-              padding: '20px',
-              textAlign: 'center',
-            }}
-          >
-            {logoSrc && (
-              <img
-                src={logoSrc}
-                alt={logoAlt}
-                width={logoWidth}
-                style={{
-                  display: 'block',
-                  margin: '0 auto',
-                  width: `${logoWidth}px`,
-                  maxWidth: '100%',
-                  height: 'auto',
-                  border: 0,
-                }}
-              />
-            )}
-            {title && (
-              <p
-                style={{
-                  margin: logoSrc ? '12px 0 0 0' : '0',
-                  fontSize: '24px',
-                  fontWeight: 'bold',
-                  color: '#333333',
-                  lineHeight: '1.2',
-                }}
-              >
-                {title}
-              </p>
-            )}
-          </td>
-        </tr>
+        <tbody>
+          <tr>
+            <td
+              align="center"
+              style={{
+                backgroundColor: bgColor,
+                padding: '20px',
+                textAlign: 'center',
+              }}
+            >
+              {logoSrc && (
+                <img
+                  src={logoSrc}
+                  alt={logoAlt}
+                  width={logoWidth}
+                  style={{
+                    display: 'block',
+                    margin: '0 auto',
+                    width: `${logoWidth}px`,
+                    maxWidth: '100%',
+                    height: 'auto',
+                    border: 0,
+                  }}
+                />
+              )}
+              {title && (
+                <p
+                  style={{
+                    margin: logoSrc ? '12px 0 0 0' : '0',
+                    fontSize: '24px',
+                    fontWeight: 'bold',
+                    color: '#333333',
+                    lineHeight: '1.2',
+                  }}
+                >
+                  {title}
+                </p>
+              )}
+            </td>
+          </tr>
+        </tbody>
       </table>
     )
   },
