@@ -321,8 +321,18 @@ export function createPuckPlugin(options: PuckPluginOptions = {}): Plugin {
     }
 
     // Register API endpoints if enabled
-    const puckCollections = [pagesCollection]
+    // Merge with any previously registered puck collections (from prior plugin instances)
+    const existingPuckCollections: string[] = incomingConfig.custom?.puck?.collections || []
+    const puckCollections = [...existingPuckCollections, pagesCollection]
     const endpointOptions = { collections: puckCollections }
+
+    // Parameterized endpoint paths that should only exist once (with merged collections)
+    const parameterizedPuckPaths = new Set([
+      '/puck/:collection',
+      '/puck/:collection/:id',
+      '/puck/:collection/:id/versions',
+      '/puck/:collection/:id/restore',
+    ])
 
     // Build styles endpoint URL list for PuckConfigProvider
     // In production, prefer the pre-compiled static CSS file if provided
@@ -339,9 +349,15 @@ export function createPuckPlugin(options: PuckPluginOptions = {}): Plugin {
       ...editorStylesheetUrls,
     ]
 
+    // Filter out parameterized puck endpoints from previous plugin instances
+    // so we can re-register them with the merged collections list
+    const incomingEndpoints = (incomingConfig.endpoints || []).filter(
+      (ep) => !parameterizedPuckPaths.has(ep.path)
+    )
+
     const endpoints = enableEndpoints
       ? [
-          ...(incomingConfig.endpoints || []),
+          ...incomingEndpoints,
           // Styles endpoint MUST be first - exact match before parameterized routes
           ...(editorStylesheet
             ? [
@@ -457,18 +473,19 @@ export function createPuckPlugin(options: PuckPluginOptions = {}): Plugin {
       collections,
       endpoints,
       // Store options in custom for the view to access
+      // Merge with existing puck config from prior plugin instances
       custom: {
         ...incomingConfig.custom,
         puck: {
+          ...incomingConfig.custom?.puck,
           collections: puckCollections,
-          layouts: options.layouts,
-          // Page-tree integration config (null if not enabled)
-          pageTree: pageTreeConfig,
-          // Editor stylesheets for iframe
-          editorStylesheets: editorStylesheets.length > 0 ? editorStylesheets : undefined,
-          // Preview URL configuration
-          previewUrl,
-          // AI configuration
+          // Per-instance settings use this instance's values (last plugin wins for shared settings)
+          layouts: options.layouts ?? incomingConfig.custom?.puck?.layouts,
+          pageTree: pageTreeConfig ?? incomingConfig.custom?.puck?.pageTree,
+          editorStylesheets: editorStylesheets.length > 0
+            ? editorStylesheets
+            : incomingConfig.custom?.puck?.editorStylesheets,
+          previewUrl: previewUrl ?? incomingConfig.custom?.puck?.previewUrl,
           ai: aiConfig?.enabled
             ? {
                 enabled: true,
@@ -477,7 +494,7 @@ export function createPuckPlugin(options: PuckPluginOptions = {}): Plugin {
                 promptsCollection: aiConfig.promptsCollection,
                 contextCollection: aiConfig.contextCollection,
               }
-            : undefined,
+            : incomingConfig.custom?.puck?.ai,
         },
       },
       onInit: async (payload) => {
