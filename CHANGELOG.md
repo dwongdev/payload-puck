@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.19] - 2026-03-12
+
+### Fixed
+
+- Multiple `createPuckPlugin()` instances now work correctly together. Previously, each instance overwrote the previous one's endpoint registrations and `custom.puck` config, causing only the first collection's API routes to function. Collections are now merged across plugin instances, parameterized endpoints are deduplicated, and shared config is preserved. ([#5](https://github.com/delmaredigital/payload-puck/issues/5))
+
 ## [0.6.17] - 2026-03-09
 
 ### Added
