@@ -174,7 +174,9 @@ export function createPuckApiRoutesWithId(
 
       // Parse request body
       const body = (await request.json()) as UpdatePageBody
-      const { puckData, title, slug, status, draft, isHomepage, swapHomepage, folder, pageSegment } = body
+      const { puckData, title, slug, status: statusField, _status, draft, isHomepage, swapHomepage, folder, pageSegment } = body
+      // Accept both `status` and `_status` (editor sends `_status` per Payload convention)
+      const status = statusField || _status
 
       // Check publish permission only if explicitly publishing
       if (status === 'published') {

@@ -315,6 +315,8 @@ export interface UpdatePageBody {
   title?: string
   slug?: string
   status?: 'draft' | 'published'
+  /** Alias for status — the editor sends `_status` (Payload convention) */
+  _status?: 'draft' | 'published'
   /**
    * When true, save as draft without publishing.
    * Used by Payload's versions.drafts system.

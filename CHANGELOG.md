@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.20] - 2026-03-20
+
+### Fixed
+
+- `createPuckApiRoutesWithId` PATCH handler now accepts both `_status` and `status` in the request body. The editor sends `_status` (Payload convention) but the handler only read `status`, causing publish to silently fail. Pages remained in draft despite clicking Publish.
+
 ## [0.6.19] - 2026-03-12
 
 ### Fixed
