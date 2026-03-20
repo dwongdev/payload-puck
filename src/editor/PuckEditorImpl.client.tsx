@@ -310,7 +310,16 @@ export function PuckEditorImpl({
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
 
   // Preview dark mode state (for toggling dark/light in preview iframe)
-  const [previewDarkMode, setPreviewDarkMode] = useState(initialPreviewDarkMode)
+  // If not explicitly set, derive from the active layout's editorDarkMode setting
+  const initialDarkMode = useMemo(() => {
+    if (initialPreviewDarkMode) return true
+    if (!layouts || layouts.length === 0) return false
+    // Check the initial data's pageLayout to find the active layout
+    const pageLayout = (initialData as PuckDataWithMeta)?.root?.props?.[layoutKey] as string | undefined
+    const activeLayout = layouts.find(l => l.value === pageLayout) ?? layouts[0]
+    return activeLayout?.editorDarkMode ?? false
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps -- only compute once on mount
+  const [previewDarkMode, setPreviewDarkMode] = useState(initialDarkMode)
 
   // Inject slug into initial data if not present
   const dataWithSlug = useMemo<PuckDataWithMeta>(() => {

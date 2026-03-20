@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.21] - 2026-03-20
+
+### Fixed
+
+- Editor preview now defaults to dark mode when the active layout has `editorDarkMode: true`. Previously, the preview dark mode toggle always started as `false`, overriding the layout setting via the `??` operator. The toggle now reads the initial layout's `editorDarkMode` on mount.
+
 ## [0.6.20] - 2026-03-20
 
 ### Fixed
