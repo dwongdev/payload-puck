@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useSearchParams } from 'next/navigation'
 import type { Config as PuckConfig, Data, Plugin as PuckPlugin } from '@puckeditor/core'
+import { mapPayloadFieldsToRootProps } from '../api/utils/mapRootProps.js'
 
 /**
  * Props for the PuckEditorView component
@@ -236,7 +237,7 @@ export function PuckEditorView({
   }
 
   // Default puck data if none exists
-  const initialData: Data = page.puckData || {
+  const basePuckData: Data = page.puckData || {
     root: {
       props: {
         title: page.title || 'New Page',
@@ -244,6 +245,22 @@ export function PuckEditorView({
     },
     content: [],
     zones: {},
+  }
+
+  // Hydrate root.props from Payload fields — ensures saved values like pageLayout,
+  // isHomepage, conversion settings etc. are reflected in the editor UI even if
+  // they weren't stored in puckData (Puck may strip props that match defaults)
+  const payloadRootProps = mapPayloadFieldsToRootProps(page as unknown as Record<string, unknown>)
+
+  const initialData: Data = {
+    ...basePuckData,
+    root: {
+      ...basePuckData.root,
+      props: {
+        ...(basePuckData.root as { props?: Record<string, unknown> })?.props,
+        ...payloadRootProps,
+      },
+    },
   }
 
   return (

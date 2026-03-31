@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.22] - 2026-03-31
+
+### Fixed
+
+- Editor now hydrates root.props from Payload fields when loading a page. Previously, saved values like `pageLayout`, `isHomepage`, conversion settings, and SEO fields were only stored in Payload columns during save but never read back into `puckData.root.props` on load. This caused the editor UI to show default values instead of the actual saved settings, and re-saving would overwrite the correct values with defaults.
+
 ## [0.6.21] - 2026-03-20
 
 ### Fixed
