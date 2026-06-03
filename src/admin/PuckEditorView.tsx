@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useParams, useSearchParams } from 'next/navigation'
 import type { Config as PuckConfig, Data, Plugin as PuckPlugin } from '@puckeditor/core'
 import { mapPayloadFieldsToRootProps } from '../api/utils/mapRootProps.js'
+import type { RootPropsMapping } from '../api/types.js'
 
 /**
  * Props for the PuckEditorView component
@@ -55,6 +56,14 @@ export interface PuckEditorViewProps {
    * Callback on save error
    */
   onSaveError?: (error: Error) => void
+  /**
+   * Custom root.props ↔ Payload field mappings, merged with the defaults.
+   *
+   * Must match the `rootPropsMapping` passed to the API routes / plugin so the
+   * editor hydrates the same fields it persists on save — otherwise
+   * custom-mapped fields appear to revert after publish.
+   */
+  rootPropsMapping?: RootPropsMapping[]
 }
 
 interface PageData {
@@ -103,6 +112,7 @@ export function PuckEditorView({
   plugins,
   onSaveSuccess,
   onSaveError,
+  rootPropsMapping,
 }: PuckEditorViewProps) {
   const params = useParams()
   const searchParams = useSearchParams()
@@ -250,7 +260,10 @@ export function PuckEditorView({
   // Hydrate root.props from Payload fields — ensures saved values like pageLayout,
   // isHomepage, conversion settings etc. are reflected in the editor UI even if
   // they weren't stored in puckData (Puck may strip props that match defaults)
-  const payloadRootProps = mapPayloadFieldsToRootProps(page as unknown as Record<string, unknown>)
+  const payloadRootProps = mapPayloadFieldsToRootProps(
+    page as unknown as Record<string, unknown>,
+    rootPropsMapping
+  )
 
   const initialData: Data = {
     ...basePuckData,

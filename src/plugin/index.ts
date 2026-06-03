@@ -155,6 +155,7 @@ export function createPuckPlugin(options: PuckPluginOptions = {}): Plugin {
     editorStylesheetCompiled,
     ai: aiConfig,
     previewUrl,
+    rootPropsMapping,
   } = options
 
   const { addEditButton = true } = pluginAdminConfig
@@ -324,7 +325,7 @@ export function createPuckPlugin(options: PuckPluginOptions = {}): Plugin {
     // Merge with any previously registered puck collections (from prior plugin instances)
     const existingPuckCollections: string[] = incomingConfig.custom?.puck?.collections || []
     const puckCollections = [...existingPuckCollections, pagesCollection]
-    const endpointOptions = { collections: puckCollections }
+    const endpointOptions = { collections: puckCollections, rootPropsMapping }
 
     // Parameterized endpoint paths that should only exist once (with merged collections)
     const parameterizedPuckPaths = new Set([
@@ -486,6 +487,10 @@ export function createPuckPlugin(options: PuckPluginOptions = {}): Plugin {
             ? editorStylesheets
             : incomingConfig.custom?.puck?.editorStylesheets,
           previewUrl: previewUrl ?? incomingConfig.custom?.puck?.previewUrl,
+          // Custom root.props ↔ Payload field mappings. Stored so the editor
+          // load view can hydrate root.props from the same mappings the save
+          // endpoints use, keeping the round-trip symmetric for custom fields.
+          rootPropsMapping: rootPropsMapping ?? incomingConfig.custom?.puck?.rootPropsMapping,
           ai: aiConfig?.enabled
             ? {
                 enabled: true,

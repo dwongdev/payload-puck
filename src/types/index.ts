@@ -3,6 +3,7 @@ import type { Config as PuckConfig, Data as PuckData } from '@puckeditor/core'
 import type { ThemeConfig } from '../theme/types.js'
 import type { LayoutDefinition, LayoutConfig } from '../layouts/types.js'
 import type { PuckPluginAiConfig, AiExamplePrompt } from '../ai/types.js'
+import type { RootPropsMapping } from '../api/types.js'
 
 // =============================================================================
 // Plugin Configuration Types
@@ -115,6 +116,17 @@ export interface PuckPluginOptions {
    * @default true
    */
   enableEndpoints?: boolean
+
+  /**
+   * Custom mappings from Puck `root.props` to Payload collection fields.
+   *
+   * Merged with the built-in defaults (title, slug, meta.*, pageLayout,
+   * conversionTracking.*, etc.). Applied in both directions: Payload field →
+   * root.prop when loading the editor, and root.prop → Payload field when
+   * saving/publishing, so values edited via Puck root fields persist to their
+   * columns instead of living only inside the puckData blob.
+   */
+  rootPropsMapping?: RootPropsMapping[]
 
   /**
    * Integration with @delmaredigital/payload-page-tree plugin

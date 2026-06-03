@@ -12,9 +12,42 @@ import type { PayloadHandler, CollectionSlug } from 'payload'
 import { APIError } from 'payload'
 import { unsetHomepage, HomepageConflictError } from '../plugin/hooks/isHomepageUnique.js'
 import { resolveLocale } from '../utils/locale.js'
+import { mapRootPropsToPayloadFields, deepMerge } from '../api/utils/mapRootProps.js'
+import type { RootPropsMapping } from '../api/types.js'
 
 export interface PuckEndpointOptions {
   collections: string[]
+  /**
+   * Custom root.props → Payload field mappings, merged with the defaults.
+   * Lets fields edited via Puck root fields (e.g. conversionTracking) sync
+   * back to their Payload columns on save/publish.
+   */
+  rootPropsMapping?: RootPropsMapping[]
+}
+
+/**
+ * Merge a Puck save payload's `data` with the Payload fields derived from its
+ * `puckData.root.props`.
+ *
+ * Mapped fields form the base; the explicitly-sent fields (puckData, title,
+ * slug, isHomepage, folder, pageSegment) take precedence. Without this, fields
+ * exposed as Puck root fields (e.g. conversionTracking, meta, pageLayout) are
+ * persisted only inside the puckData blob and never reach their Payload
+ * columns — so they appear to "revert" on publish. Mirrors the sync performed
+ * by createPuckApiRoutesWithId's PATCH handler.
+ */
+function applyRootPropsMapping(
+  data: Record<string, unknown>,
+  rootPropsMapping?: RootPropsMapping[]
+): Record<string, unknown> {
+  const rootProps =
+    (data?.puckData as { root?: { props?: Record<string, unknown> } } | undefined)?.root?.props || {}
+  const mappedFields = mapRootPropsToPayloadFields(rootProps, rootPropsMapping)
+
+  const merged: Record<string, unknown> = {}
+  deepMerge(merged, mappedFields)
+  deepMerge(merged, data)
+  return merged
 }
 
 /**
@@ -63,7 +96,7 @@ export function createListHandler(options: PuckEndpointOptions): PayloadHandler 
  * Create a new document in a Puck-enabled collection
  */
 export function createCreateHandler(options: PuckEndpointOptions): PayloadHandler {
-  const { collections } = options
+  const { collections, rootPropsMapping } = options
 
   return async (req) => {
     try {
@@ -80,11 +113,13 @@ export function createCreateHandler(options: PuckEndpointOptions): PayloadHandle
       const { _locale, ...data } = body || {}
       const locale = resolveLocale(req, _locale)
 
+      const createData = applyRootPropsMapping(data, rootPropsMapping)
+
       const doc = await req.payload.create({
         collection: collection as CollectionSlug,
         req,
         overrideAccess: false,
-        data,
+        data: createData,
         draft: true,
         ...(locale ? { locale } : {}),
       })
@@ -147,7 +182,7 @@ export function createGetHandler(options: PuckEndpointOptions): PayloadHandler {
  * Update a document (supports draft saving, publishing, and homepage swapping)
  */
 export function createUpdateHandler(options: PuckEndpointOptions): PayloadHandler {
-  const { collections } = options
+  const { collections, rootPropsMapping } = options
 
   return async (req) => {
     try {
@@ -168,10 +203,18 @@ export function createUpdateHandler(options: PuckEndpointOptions): PayloadHandle
       // Determine if this is a publish or draft save
       const shouldPublish = _status === 'published'
 
+      // Sync Puck root.props → Payload fields (e.g. conversionTracking, meta,
+      // pageLayout) so values edited via Puck root fields persist to their
+      // columns on publish instead of living only inside the puckData blob.
+      const updateData = applyRootPropsMapping(data, rootPropsMapping)
+      updateData._status = shouldPublish ? 'published' : 'draft'
+
       // Handle homepage swap if requested
       // When swapHomepage is true and isHomepage is being set to true,
-      // we need to unset the current homepage first
-      if (swapHomepage && data.isHomepage === true) {
+      // we need to unset the current homepage first. Read the resolved value
+      // from updateData so this works whether isHomepage arrived as a top-level
+      // field or was mapped in from root.props.
+      if (swapHomepage && updateData.isHomepage === true) {
         // Find the current homepage
         const existingHomepage = await req.payload.find({
           collection: collection as CollectionSlug,
@@ -200,10 +243,7 @@ export function createUpdateHandler(options: PuckEndpointOptions): PayloadHandle
         req,
         overrideAccess: false,
         id,
-        data: {
-          ...data,
-          _status: shouldPublish ? 'published' : 'draft',
-        },
+        data: updateData,
         draft: !shouldPublish,
         context: {
           // Skip the isHomepage hook if we've already handled the swap

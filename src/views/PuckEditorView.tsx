@@ -12,6 +12,7 @@ import { DefaultTemplate } from '@payloadcms/next/templates'
 import { getVisibleEntities } from '@payloadcms/ui/shared'
 import { PuckEditor } from '../editor/PuckEditor.js'
 import { mapPayloadFieldsToRootProps } from '../api/utils/mapRootProps.js'
+import type { RootPropsMapping } from '../api/types.js'
 
 export interface PuckEditorViewProps extends AdminViewProps {
   // Additional props can be passed via plugin config
@@ -80,6 +81,9 @@ export async function PuckEditorView({
   const previewUrlConfig = (payload.config as any).custom?.puck?.previewUrl as
     | string
     | ((page: any) => string | ((slug: string) => string))
+    | undefined
+  const rootPropsMapping = (payload.config as any).custom?.puck?.rootPropsMapping as
+    | RootPropsMapping[]
     | undefined
 
   // Fetch the page data
@@ -184,8 +188,13 @@ export async function PuckEditorView({
 
   if (page) {
     // Map Payload document fields to root.props format
-    // This ensures fields like title, slug, isHomepage, pageLayout are synced
-    const syncedRootProps = mapPayloadFieldsToRootProps(page as Record<string, unknown>)
+    // This ensures fields like title, slug, isHomepage, pageLayout are synced.
+    // Pass the configured custom mappings so the load direction mirrors the
+    // save endpoints (otherwise custom-mapped fields would appear to revert).
+    const syncedRootProps = mapPayloadFieldsToRootProps(
+      page as Record<string, unknown>,
+      rootPropsMapping
+    )
 
     // Handle folder ID specially (could be object or string)
     if (pageTreeConfig && page.folder !== undefined) {
