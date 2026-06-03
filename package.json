@@ -152,9 +152,9 @@
     }
   },
   "dependencies": {
-    "@puckeditor/cloud-client": "^0.6.0",
-    "@puckeditor/plugin-ai": "^0.6.0",
-    "@puckeditor/plugin-heading-analyzer": "^0.21.1",
+    "@puckeditor/cloud-client": "^0.7.0",
+    "@puckeditor/plugin-ai": "^0.7.0",
+    "@puckeditor/plugin-heading-analyzer": "^0.21.2",
     "@radix-ui/react-popover": "^1.1.15",
     "@tiptap/core": "^3.20.1",
     "@tiptap/extension-color": "^3.20.1",
@@ -173,7 +173,7 @@
   "devDependencies": {
     "@payloadcms/next": "^3.84.1",
     "@payloadcms/ui": "^3.84.1",
-    "@puckeditor/core": "^0.21.1",
+    "@puckeditor/core": "^0.21.2",
     "@swc/cli": "^0.6.0",
     "@swc/core": "^1.15.18",
     "@types/node": "^24.12.0",

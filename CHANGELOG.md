@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.26] - 2026-06-02
+
+### Fixed
+
+- **Plugin endpoints now sync Puck `root.props` back to Payload fields on save.** The plugin's own CRUD endpoints (`/api/puck/:collection/*`) persisted root-only fields (`meta.*`, `pageLayout`, `conversionTracking.*`, etc.) inside the `puckData` blob but never wrote them to their Payload columns — only the standalone `createPuckApiRoutesWithId` handler did. Because the editor load path hydrates `root.props` *from* those columns and lets them win (see 0.6.22), edits made through Puck root fields reverted on the next load or publish. The create/update handlers now map `root.props` → Payload fields, mirroring the standalone handler.
+- The configured `rootPropsMapping` is now plumbed into both editor load views (`mapPayloadFieldsToRootProps`), so **custom** mappings round-trip symmetrically rather than only the built-in defaults. The homepage-swap check now reads the merged value, so it works whether `isHomepage` arrives as a top-level field or via `root.props`.
+
+### Changed
+
+- Bumped Puck dependencies: `@puckeditor/core` (dev) and `@puckeditor/plugin-heading-analyzer` to `^0.21.2` (performance improvements, no breaking changes), and `@puckeditor/plugin-ai` / `@puckeditor/cloud-client` to `^0.7.0`. The 0.7.0 releases are backward-compatible additive changes (plugin-ai gains optional message attachments and a widened `onSubmit` signature; cloud-client extracts a named `PuckAiOptions` type, makes `puckHandler`'s `options` optional, and adds an `./experimental` subpath). No code changes were required and the peer range (`@puckeditor/core` `>=0.21.0`) is unchanged.
+
 ## [0.6.25] - 2026-05-16
 
 ### Changed
