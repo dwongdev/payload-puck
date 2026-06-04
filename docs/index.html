@@ -792,7 +792,7 @@ details .details-body > :first-child { margin-top: 0; }
   <div class="header-brand">
     <span>payload</span>-puck
   </div>
-  <span class="header-badge">v0.6.26</span>
+  <span class="header-badge">v0.6.29</span>
 
   <div class="search-wrap">
     <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -895,8 +895,8 @@ details .details-body > :first-child { margin-top: 0; }
           <tr><td><code>payload</code></td><td>&ge; 3.69.0</td><td>CMS backend</td></tr>
           <tr><td><code>@payloadcms/next</code></td><td>&ge; 3.69.0</td><td>Payload Next.js integration</td></tr>
           <tr><td><code>next</code></td><td>&ge; 15.4.8</td><td>React framework</td></tr>
-          <tr><td><code>react</code></td><td>&ge; 19.2.1</td><td>UI library</td></tr>
-          <tr><td><code>@tailwindcss/typography</code></td><td>&ge; 0.5.0</td><td>RichText component styling</td></tr>
+          <tr><td><code>react</code> / <code>react-dom</code></td><td>&ge; 19.2.1</td><td>UI library</td></tr>
+          <tr><td><code>tailwindcss</code></td><td>&ge; 3.0.0 (or &ge; 4.0.0)</td><td>Component &amp; RichText styling</td></tr>
         </tbody>
       </table>
 
@@ -1262,6 +1262,7 @@ payload generate:importmap</code></pre>
           <tr><td><strong>Container</strong></td><td>Content wrapper with max-width and background</td></tr>
           <tr><td><strong>Flex</strong></td><td>Flexible box layout with direction and alignment</td></tr>
           <tr><td><strong>Grid</strong></td><td>CSS Grid layout with responsive columns</td></tr>
+          <tr><td><strong>Columns</strong></td><td>Multi-column layout with an independent drop zone per column</td></tr>
           <tr><td><strong>Section</strong></td><td>Two-layer: full-bleed section + constrained content area</td></tr>
           <tr><td><strong>Spacer</strong></td><td>Vertical/horizontal spacing element</td></tr>
           <tr><td><strong>Template</strong></td><td>Save/load reusable component arrangements</td></tr>
@@ -1320,7 +1321,7 @@ payload generate:importmap</code></pre>
         <thead><tr><th>Field</th><th>Description</th></tr></thead>
         <tbody>
           <tr><td><code>MediaField</code></td><td>Payload media library integration</td></tr>
-          <tr><td><code>RichTextField</code></td><td>Puck's native richtext with enhancements (colors, font sizes, highlights)</td></tr>
+          <tr><td><code>createRichTextField</code></td><td>Puck's native richtext with enhancements (colors, font sizes, highlights)</td></tr>
           <tr><td><code>ColorPickerField</code></td><td>Color picker with opacity and presets</td></tr>
           <tr><td><code>BackgroundField</code></td><td>Solid colors, gradients, images</td></tr>
           <tr><td><code>PaddingField / MarginField</code></td><td>Visual spacing editors</td></tr>
@@ -2080,7 +2081,7 @@ payload generate:importmap</code></pre>
   payloadConfig: config,
   auth: {
     authenticate: <span class="hl-keyword">async</span> (request) =&gt; {
-      <span class="hl-keyword">return</span> { user: { id: <span class="hl-string">'...'</span> } }
+      <span class="hl-keyword">return</span> { authenticated: <span class="hl-const">true</span>, user: { id: <span class="hl-string">'...'</span> } }
     },
   },
   ai: {
@@ -2133,11 +2134,15 @@ payload generate:importmap</code></pre>
       <pre><span class="lang-tag">tsx</span><button class="copy-btn" onclick="copyBlock(this)">Copy</button><code><span class="hl-comment">// Server-side rendering — produce email HTML string</span>
 <span class="hl-keyword">import</span> { renderToEmailHtml } <span class="hl-keyword">from</span> <span class="hl-string">'@delmaredigital/payload-puck/email'</span>
 
-<span class="hl-keyword">const</span> html = <span class="hl-func">renderToEmailHtml</span>(puckData, {
-  subject: <span class="hl-string">'Welcome!'</span>,
-  previewText: <span class="hl-string">'Thanks for signing up'</span>,
-  backgroundColor: <span class="hl-string">'#f4f4f4'</span>,
-})</code></pre>
+<span class="hl-comment">// subject / previewText / backgroundColor / fontFamily / maxWidth</span>
+<span class="hl-comment">// are read from the email's root props (edited in the builder).</span>
+<span class="hl-keyword">const</span> puckData = {
+  root: { props: { subject: <span class="hl-string">'Welcome!'</span>, previewText: <span class="hl-string">'Thanks for signing up'</span>, backgroundColor: <span class="hl-string">'#f4f4f4'</span> } },
+  content: [<span class="hl-comment">/* ... */</span>],
+}
+
+<span class="hl-comment">// Optional 2nd arg: { config } to override the email Puck config.</span>
+<span class="hl-keyword">const</span> html = <span class="hl-func">renderToEmailHtml</span>(puckData)</code></pre>
 
       <h3>Dual Config Architecture</h3>
       <p>Email configs follow the same server/client split as web page configs:</p>
